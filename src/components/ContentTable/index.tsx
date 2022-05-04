@@ -1,28 +1,47 @@
 import { 
     Table, TableBody, TableCell, TableContainer, 
     TableFooter, TableRow, Stack, Pagination, TableHead 
-
 } from "@mui/material"
-import React, { useContext, useState }  from "react"
+import React, { useContext, useEffect, useState }  from "react"
 import { MainContext } from "../../context/main-content-context"
+import { getTotalCount } from "../../services/newsApi"
 import { dateFormat } from "../../shared/date"
+import { ContentSearch } from "../ContentSearch"
 import { SelectRowRange } from "../SelectRowRange"
 
 
 export const ContentTable = () => {
 
-    const { news, page, setPage, quantity, handleChangePageData } = useContext(MainContext)
+    const [totalPageNumbers, setTotalPageCount] = useState(0)
+
+    const { 
+        news,
+        page, 
+        setPage, 
+        quantity, 
+        handleChangePageData 
+    } = useContext(MainContext)
     
     
     const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
         setPage(value);
         handleChangePageData(value - 1)
-      };
+    };
     
-    //definido como 500 o número máximo de artigos
+    
     const defineNumberOfPages = () => {
-        return (Math.floor(500 / Number(quantity))) 
+        return (Math.floor(totalPageNumbers / Number(quantity))) 
     }
+
+
+    useEffect(() => {
+        async function getTotalPageCount () {
+            const response = await getTotalCount();
+
+            setTotalPageCount(response)
+        }
+        getTotalPageCount()
+    }, [])
 
 
     return (
@@ -32,10 +51,18 @@ export const ContentTable = () => {
                     <TableRow>
                         <TableCell>
                             <SelectRowRange/>
+                            <ContentSearch updatePageCount={setTotalPageCount}/>
                         </TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
+                    {news.length === 0 && 
+                        <TableRow>
+                            <TableCell>
+                                Nenhum Resultado Encontrado
+                            </TableCell>
+                        </TableRow>
+                    }
                     {news.map(article => (
                         <TableRow key={article.id}>
                             <TableCell>{article.title}</TableCell> 
@@ -43,6 +70,7 @@ export const ContentTable = () => {
                         </TableRow>
                     ))}
                 </TableBody>
+                {news.length > 0 && 
                 <TableFooter>
                     <TableRow>
                         <TableCell>
@@ -52,6 +80,7 @@ export const ContentTable = () => {
                         </TableCell>
                     </TableRow>
                 </TableFooter>
+                }
             </Table>
         </TableContainer>
 
