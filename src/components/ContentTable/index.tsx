@@ -1,25 +1,30 @@
 import { 
     Table, TableBody, TableCell, TableContainer, 
-    TableFooter, TableRow, Stack, Pagination, TablePagination, TableHead 
+    TableFooter, TableRow, Stack, Pagination, TableHead 
 
 } from "@mui/material"
 import React, { useContext, useState }  from "react"
 import { MainContext } from "../../context/main-content-context"
 import { dateFormat } from "../../shared/date"
-import { NewsResponse } from "../../shared/types"
 import { SelectRowRange } from "../SelectRowRange"
 
 
 export const ContentTable = () => {
 
-    const { news, page, setPage, handleChangePageData } = useContext(MainContext)
+    const { news, page, setPage, quantity, handleChangePageData } = useContext(MainContext)
     
-
+    
     const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
         setPage(value);
         handleChangePageData(value - 1)
       };
     
+    //definido como 500 o número máximo de artigos
+    const defineNumberOfPages = () => {
+        return (Math.floor(500 / Number(quantity))) 
+    }
+
+
     return (
         <TableContainer>
             <Table>
@@ -42,7 +47,7 @@ export const ContentTable = () => {
                     <TableRow>
                         <TableCell>
                             <Stack spacing={2}>
-                                <Pagination count={10} page={page} onChange={handleChange} />
+                                <Pagination count={defineNumberOfPages()} page={page} onChange={handleChange} />
                             </Stack>
                         </TableCell>
                     </TableRow>

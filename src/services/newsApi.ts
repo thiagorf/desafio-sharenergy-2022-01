@@ -27,3 +27,9 @@ export const getNextNews =  (quantity = "10") => async (skip: number) => {
 
     return response.data
 }
+
+export const searchForArticle = async (text: string) => {
+    const response = await api.get(`/articles?title_contains=${text}`)
+
+    return response.data
+}
