@@ -16,14 +16,16 @@ export const SelectRowRange = () => {
     }
 
     return (
-        <FormControl fullWidth>
+        <FormControl sx={{
+            width: '200px'
+        }}>
             <InputLabel id="range-select">Rows Per Page</InputLabel>
             <Select
-                labelId="drange-select"
-                id="demo-simple-select"
+                id="range-select"
                 value={quantity}
-                label="Age"
+                label="Rows Per Page"
                 onChange={handleChange}
+                
             >
                 <MenuItem value={10}>10</MenuItem>
                 <MenuItem value={25}>25</MenuItem>

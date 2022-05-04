@@ -1,12 +1,13 @@
 import { 
     Table, TableBody, TableCell, TableContainer, 
-    TableFooter, TableRow, Stack, Pagination, TableHead 
+    TableFooter, TableRow, Stack, Pagination, TableHead, Box, Grid 
 } from "@mui/material"
 import React, { useContext, useEffect, useState }  from "react"
 import { MainContext } from "../../context/main-content-context"
 import { getTotalCount } from "../../services/newsApi"
 import { dateFormat } from "../../shared/date"
 import { ContentSearch } from "../ContentSearch"
+import { DateRange } from "../DateRange"
 import { SelectRowRange } from "../SelectRowRange"
 
 
@@ -38,6 +39,7 @@ export const ContentTable = () => {
         async function getTotalPageCount () {
             const response = await getTotalCount();
 
+            console.log(new Date("04/05/2022").toISOString())
             setTotalPageCount(response)
         }
         getTotalPageCount()
@@ -50,8 +52,18 @@ export const ContentTable = () => {
                 <TableHead>
                     <TableRow>
                         <TableCell>
-                            <SelectRowRange/>
-                            <ContentSearch updatePageCount={setTotalPageCount}/>
+                            
+                            <Box sx={{
+                                display: 'flex',
+                                flexDirection: "row"
+                            
+                            }}>
+                                <SelectRowRange/>                              
+                                <ContentSearch updatePageCount={setTotalPageCount}/>                               
+                                <DateRange />
+                            </Box>
+                            
+                            
                         </TableCell>
                     </TableRow>
                 </TableHead>

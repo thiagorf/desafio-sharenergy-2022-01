@@ -35,7 +35,7 @@ export const ContentSearch = ({ updatePageCount }: ContentSearchProps) => {
     return (
         <>
             <Paper
-                component="form"
+                component="div"
                 sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: 400 }}
             >
                 <InputBase
