@@ -2,13 +2,14 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
+import { useContext } from 'react';
+import { MainContext } from '../../context/main-content-context';
 
-interface RowRangeProps {
-    quantity: string;
-    setQuantity: React.Dispatch<React.SetStateAction<string>>
-}
 
-export const SelectRowRange = ({quantity, setQuantity}: RowRangeProps) => {
+
+export const SelectRowRange = () => {
+
+    const { setQuantity, quantity } = useContext(MainContext)
 
     const handleChange = (event: SelectChangeEvent) => {
         setQuantity(event.target.value as string)

@@ -3,33 +3,17 @@ import {
     TableFooter, TableRow, Stack, Pagination, TablePagination, TableHead 
 
 } from "@mui/material"
-import React, { useState }  from "react"
+import React, { useContext, useState }  from "react"
+import { MainContext } from "../../context/main-content-context"
 import { dateFormat } from "../../shared/date"
 import { NewsResponse } from "../../shared/types"
 import { SelectRowRange } from "../SelectRowRange"
 
-interface ContentProps {
-    news: NewsResponse[]
-    handleChangePageData?: (pageNumber: number) => Promise<void>
-    page: number
-    setPage: React.Dispatch<React.SetStateAction<number>>
-    quantity?: string;
-    setQuantity?: React.Dispatch<React.SetStateAction<string>>
-}
 
+export const ContentTable = () => {
 
-export const ContentTable = ({
-    news, 
-    handleChangePageData, 
-    page, 
-    setPage, 
-    quantity, 
-    setQuantity}: ContentProps) => {
-
-    const selectProps = {
-        quantity,
-        setQuantity
-    }
+    const { news, page, setPage, handleChangePageData } = useContext(MainContext)
+    
 
     const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
         setPage(value);
@@ -42,7 +26,7 @@ export const ContentTable = ({
                 <TableHead>
                     <TableRow>
                         <TableCell>
-                            <SelectRowRange {...selectProps}/>
+                            <SelectRowRange/>
                         </TableCell>
                     </TableRow>
                 </TableHead>
