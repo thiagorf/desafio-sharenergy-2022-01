@@ -5,24 +5,24 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { useContext } from 'react';
 import { MainContext } from '../../context/main-content-context';
 
-
-
 export const SelectRowRange = () => {
 
-    const { setQuantity, quantity } = useContext(MainContext)
+    const { setQueryString, queryString, toggleLoading } = useContext(MainContext)
 
     const handleChange = (event: SelectChangeEvent) => {
-        setQuantity(event.target.value as string)
+        toggleLoading(true)
+        setQueryString({...queryString, _limit: event.target.value as string})
     }
 
     return (
         <FormControl sx={{
-            width: '200px'
+            width: '100%',
+            mb: 1
         }}>
             <InputLabel id="range-select">Rows Per Page</InputLabel>
             <Select
                 id="range-select"
-                value={quantity}
+                value={queryString._limit}
                 label="Rows Per Page"
                 onChange={handleChange}
                 

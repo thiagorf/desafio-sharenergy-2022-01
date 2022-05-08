@@ -1,6 +1,6 @@
 import React, { createContext, useEffect, useState } from "react"
-import { getLatestArticles, getNextNews, getNextNewsMatch } from "../services/newsApi"
-import { NewsResponse } from "../shared/types"
+import { getContent, getContentCount } from "../services/newsApi"
+import { NewsResponse, QueryParams } from "../shared/types"
 
 interface MainConentContextProps {
     children: React.ReactNode
@@ -12,60 +12,77 @@ interface ContentProps {
     page: number
     setPage: React.Dispatch<React.SetStateAction<number>>
     setNews: React.Dispatch<React.SetStateAction<NewsResponse[]>>
-    setInput: React.Dispatch<React.SetStateAction<string>>
-    quantity?: string;
-    setQuantity?: React.Dispatch<React.SetStateAction<string>>
+    queryString: QueryParams
+    setQueryString: React.Dispatch<React.SetStateAction<QueryParams>>
+    setTotalPageCount: React.Dispatch<React.SetStateAction<number>>
+    defineNumberOfPages: () => number
+    handleQueryString: (newValue: any) => void
+    toggleLoading: (laod: boolean) => void
+    loading: boolean
 }
 
 export const MainContext = createContext<ContentProps | null>(null)
 
-
 export const MainContentContext = ({children}: MainConentContextProps) => {
     const [news, setNews] = useState<NewsResponse[]>([])
-    const [input, setInput] = useState("")
     const [page, setPage] = useState(1)
-    const [quantity, setQuantity] = useState("10")
+    const [totalPageNumbers, setTotalPageCount] = useState(0)
+    const [loading, setLoading] = useState(false)
+    const [queryString, setQueryString] = useState<QueryParams>({
+        _limit: "10",
+        _start: 0,
+        title_contains: null,
+        publishedAt_lte: null,
+        publishedAt_gte: null
+    })
 
-    //currying?
-    const nextQty = getNextNews(quantity)
-    const nextQtyMatch = getNextNewsMatch(quantity, input)
+    const toggleLoading = (load: boolean) => {
+        setLoading(load)
+    }
 
+    const handleQueryString = (newValue: any) => {
+        setQueryString(oldValue => ({...oldValue, ...newValue}))
+    }
+
+    const defineNumberOfPages = () => {
+        return (Math.floor(totalPageNumbers / Number(queryString._limit))) 
+    }
 
     const handleChangePageData = async (
         newPage: number,
-      ) => {
-        if(!input) {
-            const response = await nextQty(Number(quantity) * newPage)
-
-            setNews(response)
-        } else {
-            const response = await nextQtyMatch(Number(quantity) * newPage)
-            console.log(response);
-            
-            setNews(response)
-        }
+    ) => {
+        const response = await getContent({...queryString, _start: Number(queryString._limit) * newPage})
         
-      };
+        setNews(response)
+    };
 
     useEffect(() => {
         async function latest() {
-            const response = await getLatestArticles(quantity)
-
-            setNews(response)           
+                if(loading) {
+                const response = await getContent(queryString)
+                const resultlength = await getContentCount(queryString)
+                setTotalPageCount(resultlength) 
+                setNews(response) 
+                setLoading(false)      
+            }
+            return
         }
         latest()
-
-    }, [quantity])
+    },[loading])
 
     const tableProps = {
+        toggleLoading,
+        loading,
         news,
+        setQueryString,
+        setTotalPageCount,
+        defineNumberOfPages,
+        queryString,
         setNews,
-        setInput,
         handleChangePageData,
         page,
         setPage,
-        quantity,
-        setQuantity
+        handleQueryString
     }
 
     return (

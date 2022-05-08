@@ -1,55 +1,41 @@
-import { Paper, InputBase, IconButton, Box} from "@mui/material"
-import DateRangeIcon from '@mui/icons-material/DateRange';
-import { useState } from "react";
+import { Stack, TextField} from "@mui/material"
+import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker/DesktopDatePicker";
+import { useEffect, useState } from "react";
+import { DateRangeParams } from "../../shared/types";
 
-interface DateRangeData {
-    begins_at: string
-    ends_at: string
+interface SetDateRange {
+    handleRange: (dateRange: DateRangeParams) => void
 }
 
-export const DateRange = () => {
-
-    const [dateRange, setDateRange] = useState<DateRangeData>({
-        begins_at: "",
-        ends_at: ""
+export const DateRange = ({ handleRange }: SetDateRange) => {
+    const [dateRange, setDateRange] = useState<DateRangeParams>({
+        publishedAt_lte: null,
+        publishedAt_gte: null
     })
-    console.log(dateRange);
-    
 
-    
+    useEffect(() => {
+        handleRange(dateRange)
+
+    }, [dateRange])
 
     return (
-        <>
-            <Paper
-                component="div"
-                sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: 200 }}
-            >
-                <Box sx={{fontSize: '1rem'}}>De</Box>
-                <InputBase
-                    sx={{ ml: 1, flex: 1 }}
-                    placeholder="20/10/2000"
-                    inputProps={{ 'aria-label': 'search google maps' }}
-                    onChange={(e) => setDateRange({...dateRange, begins_at: e.target.value})}
-                />
-                <IconButton sx={{ p: '10px' }} aria-label="search">
-                    <DateRangeIcon />
-                </IconButton>
-            </Paper>   
-            <Paper
-                component="div"
-                sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: 200 }}
-            >
-                <Box sx={{fontSize: '1rem'}}>Até</Box>
-                <InputBase
-                    sx={{ ml: 1, flex: 1 }}
-                    placeholder="20/10/2000"
-                    inputProps={{ 'aria-label': 'search google maps' }}
-                    onChange={(e) => setDateRange({...dateRange, ends_at: e.target.value})}
-                />
-                <IconButton sx={{ p: '10px' }} aria-label="search">
-                    <DateRangeIcon />
-                </IconButton>
-            </Paper>   
-        </>
+        <Stack direction="row" sx={{width: "100%", mb: 1}}>
+            <DesktopDatePicker   
+                label="De"
+                inputFormat="MM/dd/yyyy"
+                value={dateRange.publishedAt_gte}
+                onChange={(date) => setDateRange({...dateRange, publishedAt_gte: date})}
+                
+                renderInput={(params) => <TextField {...params} />}
+            />
+            <DesktopDatePicker
+                label="Até"
+                inputFormat="MM/dd/yyyy"
+                value={dateRange.publishedAt_lte}
+                onChange={(date) => setDateRange({...dateRange, publishedAt_lte: date})}
+                
+                renderInput={(params) => <TextField {...params} />}
+            />
+        </Stack>
     )
 }

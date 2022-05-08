@@ -1,28 +1,22 @@
 import { useContext, useEffect } from "react"
 import { ContentTable } from "../../components/ContentTable"
-import { getLatestArticles} from "../../services/newsApi"
+import { getContent } from "../../services/newsApi"
 import { MainContext } from "../../context/main-content-context"
 
 export const Articles = () => {
 
-    const { quantity, setNews } = useContext(MainContext)
+    const { queryString, setNews } = useContext(MainContext)
 
     useEffect(() => {
         async function latest() {
-            const response = await getLatestArticles(quantity)
+            const response = await getContent(queryString)
 
             setNews(response)
         }
 
         latest()
-    }, [quantity])
+    }, [queryString._limit])
 
 
-    return (
-        <>
-            <h1>teste</h1>
-            <ContentTable />
-        </>
-        
-    )
+    return <ContentTable />
 }
