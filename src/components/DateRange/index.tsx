@@ -12,7 +12,6 @@ export const DateRange = ({ handleRange }: SetDateRange) => {
         publishedAt_lte: null,
         publishedAt_gte: null
     })
-
     useEffect(() => {
         handleRange(dateRange)
 

@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useState } from "react"
+import React, { createContext, useCallback, useEffect, useState } from "react"
 import { getContent, getContentCount } from "../services/newsApi"
 import { NewsResponse, QueryParams } from "../shared/types"
 
@@ -44,6 +44,7 @@ export const MainContentContext = ({children}: MainConentContextProps) => {
         setQueryString(oldValue => ({...oldValue, ...newValue}))
     }
 
+    
     const defineNumberOfPages = () => {
         return (Math.floor(totalPageNumbers / Number(queryString._limit))) 
     }
@@ -61,6 +62,7 @@ export const MainContentContext = ({children}: MainConentContextProps) => {
                 if(loading) {
                 const response = await getContent(queryString)
                 const resultlength = await getContentCount(queryString)
+                setPage(1)
                 setTotalPageCount(resultlength) 
                 setNews(response) 
                 setLoading(false)      

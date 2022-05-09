@@ -15,7 +15,7 @@ export const FormHandler = () => {
         publishedAt_lte: null,
         publishedAt_gte: null
     })
-    
+
     const {
         toggleLoading,
         handleQueryString
@@ -23,13 +23,11 @@ export const FormHandler = () => {
 
     const handleSubmit = async (event: React.SyntheticEvent) => {
         event.preventDefault()
-
         const idealResponseFormat = {
             ...formData,
             publishedAt_lte: idealDateFormat(formData.publishedAt_lte),
             publishedAt_gte: idealDateFormat(formData.publishedAt_gte)
         }
-
         handleQueryString(idealResponseFormat)
         toggleLoading(true)
   

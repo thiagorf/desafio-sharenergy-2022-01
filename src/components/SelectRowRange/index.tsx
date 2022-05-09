@@ -19,11 +19,11 @@ export const SelectRowRange = () => {
             width: '100%',
             mb: 1
         }}>
-            <InputLabel id="range-select">Rows Per Page</InputLabel>
+            <InputLabel id="range-select">Colunas por página</InputLabel>
             <Select
                 id="range-select"
                 value={queryString._limit}
-                label="Rows Per Page"
+                label="Colunas por página"
                 onChange={handleChange}
                 
             >

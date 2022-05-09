@@ -5,7 +5,7 @@ import TableFooter from "@mui/material/TableFooter"
 import TableRow from "@mui/material/TableRow"
 import { useContext, useEffect } from "react"
 import { MainContext } from "../../context/main-content-context"
-import { getTotalCount } from "../../services/newsApi"
+import { getContentCount, getTotalCount } from "../../services/newsApi"
 
 export const TableRowPagination = () => {
 
@@ -14,22 +14,25 @@ export const TableRowPagination = () => {
         setPage, 
         defineNumberOfPages, 
         handleChangePageData, 
-        setTotalPageCount 
+        setTotalPageCount,
+        queryString
     } = useContext(MainContext)
 
     const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
         setPage(value);
+        
         handleChangePageData(value - 1)
     };
       
+
     useEffect(() => {
         async function getTotalPageCount () {
-            const response = await getTotalCount();
+            const response = await getContentCount(queryString);
      
             setTotalPageCount(response)
         }
         getTotalPageCount()
-    }, [])
+    }, [queryString])
 
 
     return (
